@@ -3,13 +3,22 @@ import * as ReactDOM from "react-dom";
 import io from "socket.io-client";
 import * as firebase from "firebase";
 
+import { Forest } from "./forest";
+
+import "./forest/monkeypatchThree";
+
+import "./index.scss";
+
 class App extends React.Component<{db: firebase.database.Database}, {}> {
     render() {
         return (
-            <div>
-                <h1>Polyphone.io</h1>
-                <FooListener db={db}/>
-            </div>
+            <>
+                <Forest />
+                <div style={{position: "relative"}}>
+                    <h1>Polyphone.io</h1>
+                    <FooListener db={db}/>
+                </div>
+            </>
         );
     }
 };

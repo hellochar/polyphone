@@ -1,0 +1,15 @@
+$palatino-family: Palatino, Palatino Linotype, Palatino LT STD, Book Antiqua, serif; 
+$georgia-family: Georgia,Cambria,"Times New Roman",Times,serif;
+$arial-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+
+@import "~normalize.css/";
+
+@import "./forest/forest";
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    overflow: hidden;
+}
