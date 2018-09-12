@@ -182,6 +182,7 @@ export class ForestSketch {
             this.self.rotation.copy(this.camera.rotation);
             this.self.pushSharedState();
         }
+        console.log(this.camera.rotation);
         this.scene.animate();
         this.composer.render();
         requestAnimationFrame(this.animate);
@@ -196,6 +197,10 @@ export class ForestSketch {
         if (parent != null) {
             this.renderer.setSize(parent.clientWidth, parent.clientHeight);
             console.log(parent.clientWidth, parent.clientHeight);
+            if (this.camera != null) {
+                this.camera.aspect = 1 / this.aspectRatio;
+                this.camera.updateProjectionMatrix();
+            }
         }
     }
 }
