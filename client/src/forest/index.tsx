@@ -1,8 +1,9 @@
 import * as React from "react";
 
 import { ForestSketch } from "./sketch";
+import { database } from "firebase";
 
-export class Forest extends React.Component<{}, {}> {
+export class Forest extends React.Component<{db: database.Database}, {}> {
     private sketch?: ForestSketch;
     private handleCanvasRef = (canvas: HTMLCanvasElement | null) => {
         if (canvas == null) {
@@ -10,7 +11,7 @@ export class Forest extends React.Component<{}, {}> {
                 this.sketch.dispose();
             }
         } else {
-            this.sketch = new ForestSketch(canvas);
+            this.sketch = new ForestSketch(this.props.db, canvas);
         }
     }
 

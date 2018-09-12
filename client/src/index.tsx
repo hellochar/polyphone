@@ -13,7 +13,7 @@ class App extends React.Component<{db: firebase.database.Database}, {}> {
     render() {
         return (
             <>
-                <Forest />
+                <Forest db={db} />
                 <div style={{position: "relative"}}>
                     <h1>Polyphone.io</h1>
                     <FooListener db={db}/>
@@ -65,8 +65,8 @@ const FooRenderer: React.StatelessComponent<{val: any}> = ({ val }) => (
     </div>
 );
 
-const server = io();
-server.send("hello");
+// const server = io();
+// server.send("hello");
 
 const config = {
     apiKey: "AIzaSyBT3hTYRj0u-ApZE1_Z1fyXf2ZiV9mgXr0",
@@ -79,7 +79,7 @@ const config = {
 firebase.initializeApp(config);
 
 const db = firebase.database();
-// console.log(db);
+console.log(db);
 
 // const fooRef = db.ref("foo");
 // fooRef.on("value", (snapshot) => {

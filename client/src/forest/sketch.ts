@@ -1,6 +1,24 @@
+import { database } from "firebase";
 import * as THREE from "three";
 
 import PostPass from "../post";
+import { getMyUserId } from "./userId";
+
+interface DatabaseSchema {
+    /**
+     * Set of users in existence.
+     */
+    users: DatabaseUsers;
+}
+
+interface DatabaseUsers {
+    [userId: string]: DatabaseUser;
+}
+
+interface DatabaseUser {
+    position: { x: number, y: number, z: number },
+    rotation: { x: number, y: number, z: number },
+}
 
 interface Thing extends THREE.Object3D {
     animate(): void;
@@ -13,11 +31,16 @@ export class ForestSketch {
     private composer: THREE.EffectComposer;
     private diControls?: THREE.DeviceOrientationControls;
     private orbitControls?: THREE.OrbitControls;
+    public users: Map<string, User> = new Map();
     get aspectRatio() {
         return this.renderer.domElement.height / this.renderer.domElement.width;
     }
 
-    constructor(public canvas: HTMLCanvasElement) {
+    get self() {
+        return this.users.get(getMyUserId());
+    }
+
+    constructor(public db: database.Database, public canvas: HTMLCanvasElement) {
         (window as any).sketch = this;
         this.renderer = this.initRenderer();
 
@@ -40,7 +63,61 @@ export class ForestSketch {
 
         this.composer = this.initComposer();
 
+        this.initMyUser();
+        this.setupUsersListeners();
+
         requestAnimationFrame(this.animate);
+    }
+
+    private syncUsersWithDatabase(dbUsers: DatabaseUsers) {
+        // add new users (they will autosync)
+        // delete old users, TODO
+        // const oldUserIds = this.users.keys();
+        for (const userId in dbUsers) {
+            if (!this.users.has(userId)) {
+                const ref = this.db.ref(`users/${userId}`);
+                const user = new User(ref);
+                this.users.set(userId, user);
+                this.scene.add(user);
+            }
+        }
+    }
+
+    private async initMyUser() {
+        // Add myself to the database
+        try {
+            const myUserId = getMyUserId();
+
+            // const myUserIdRef = this.db.ref(`userIds/${myUserId}`);
+            // await myUserIdRef.set(true);
+
+            const myUserRef = this.db.ref(`users/${myUserId}`);
+            const newUser: DatabaseUser = {
+                position: {
+                    x: THREE.Math.randFloat(-200, 200),
+                    y: THREE.Math.randFloat(-200, 200),
+                    z: THREE.Math.randFloat(-200, 200),
+                },
+                rotation: {
+                    x: 0,
+                    y: 0,
+                    z: 0,
+                }
+            };
+            await myUserRef.set(newUser);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    private setupUsersListeners() {
+        const usersRef = this.db.ref("users/");
+        usersRef.on("value", (snapshot) => {
+            if (snapshot != null) {
+                const users: DatabaseUsers = snapshot.val();
+                this.syncUsersWithDatabase(users);
+            }
+        });
     }
 
     private initRenderer() {
@@ -100,8 +177,13 @@ export class ForestSketch {
         if (this.orbitControls) {
             this.orbitControls.update();
         }
+        if (this.self != null) {
+            this.camera.position.copy(this.self.position);
+            this.self.rotation.copy(this.camera.rotation);
+            this.self.pushSharedState();
+        }
         this.scene.animate();
-        this.composer.render(millisDt);
+        this.composer.render();
         requestAnimationFrame(this.animate);
     };
 
@@ -260,4 +342,51 @@ class Sky extends THREE.Object3D implements Thing {
     animate() {
 
     }
+}
+
+class User extends THREE.Mesh implements Thing {
+    private static geometry = new THREE.TorusKnotBufferGeometry(10, 3, 100, 16);
+    private static material = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 1, });
+    constructor(public myRef: database.Reference) {
+        super(User.geometry, User.material);
+        // this handles updating
+        myRef.on("value", (snapshot) => {
+            if (snapshot != null) {
+                const value: DatabaseUser = snapshot.val();
+                this.updateSharedState(value);
+            } else {
+                // TODO handle null
+            }
+        });
+
+        this.add(new THREE.AxesHelper(100));
+    }
+
+    public async pushSharedState() {
+        try {
+            const newUser: DatabaseUser = {
+                position: {
+                    x: this.position.x,
+                    y: this.position.y,
+                    z: this.position.z,
+                },
+                rotation: {
+                    x: this.rotation.x,
+                    y: this.rotation.y,
+                    z: this.rotation.z,
+                },
+            };
+            await this.myRef.set(newUser);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    private updateSharedState(databaseUser: DatabaseUser) {
+        const { position, rotation } = databaseUser;
+        this.position.set(position.x, position.y, position.z);
+        this.rotation.set(rotation.x, rotation.y, rotation.z);
+    }
+
+    animate() { }
 }
