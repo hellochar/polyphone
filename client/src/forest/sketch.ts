@@ -3,6 +3,9 @@ import * as THREE from "three";
 
 import PostPass from "../post";
 import { getMyUserId } from "./userId";
+import { AudioManager } from "./audioManager";
+
+let frequencyAmplitudes: Uint8Array;
 
 interface DatabaseSchema {
     // unix ms to begin playback
@@ -44,7 +47,8 @@ export class ForestSketch {
         return this.users.get(getMyUserId());
     }
 
-    constructor(public db: database.Database, public canvas: HTMLCanvasElement) {
+    constructor(public db: database.Database, public audioManager: AudioManager, public canvas: HTMLCanvasElement) {
+        frequencyAmplitudes = this.audioManager.getFrequencyAmplitudes();
         (window as any).sketch = this;
         this.renderer = this.initRenderer();
 
@@ -177,6 +181,7 @@ export class ForestSketch {
     }
 
     public animate = (millisDt: number) => {
+        this.audioManager.update();
         if (this.diControls) {
             this.diControls.update();
         }
@@ -294,6 +299,8 @@ class Spheres extends THREE.Object3D implements Thing {
     }
 
     animate() {
+        const scale = THREE.Math.mapLinear(frequencyAmplitudes[5], 0, 255, 0.1, 10);
+        this.scale.setScalar(scale);
         this.rotation.x += 0.002;
         this.rotation.z += 0.0045;
     }

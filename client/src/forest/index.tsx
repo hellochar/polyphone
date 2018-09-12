@@ -2,49 +2,25 @@ import * as React from "react";
 
 import { ForestSketch } from "./sketch";
 import { database } from "firebase";
-import { AudioClip } from "../audio/audioClip";
+import { AudioManager } from "./audioManager";
 
 export class Forest extends React.Component<{db: database.Database, isAdmin?: boolean}, { audioPlaybackBegin: number, now: number }> {
     state = {
         now: Date.now(),
         audioPlaybackBegin: -1,
     };
-
-    private audioClip: AudioClip = new AudioClip({
-        autoplay: false,
-        srcs: ["june_3rd.mp3", "june_3rd.wav"],
-    });
-
     private playbackBeginRef: database.Reference;
+    private audioManager = new AudioManager();
     constructor(props: any, context: any) {
         super(props, context);
         this.playbackBeginRef = this.props.db.ref("audioPlaybackBegin");
         this.playbackBeginRef.on("value", (snapshot) => {
             if (snapshot != null) {
                 this.setState({audioPlaybackBegin: snapshot.val()});
-                this.syncAudioClip(snapshot.val());
+                this.audioManager.syncAudioClip(snapshot.val());
             }
         });
     }
-
-    private syncAudioClip(playbackBegin: number) {
-        if (playbackBegin < 0) {
-            this.audioClip.element.pause();
-            this.audioClip.element.currentTime = 0;
-        } else if (playbackBegin > Date.now()) {
-            // schedule it in the future
-            // TODO maybe make this more precize
-            setTimeout(() => {
-                this.audioClip.play();
-            }, playbackBegin - Date.now());
-        } else {
-            // we're already playing
-            const curPosition = (Date.now() - playbackBegin) / 1000;
-            this.audioClip.element.currentTime = curPosition;
-            this.audioClip.play();
-        }
-    }
-
 
     private sketch?: ForestSketch;
     private handleCanvasRef = (canvas: HTMLCanvasElement | null) => {
@@ -53,7 +29,7 @@ export class Forest extends React.Component<{db: database.Database, isAdmin?: bo
                 this.sketch.dispose();
             }
         } else {
-            this.sketch = new ForestSketch(this.props.db, canvas);
+            this.sketch = new ForestSketch(this.props.db, this.audioManager, canvas);
         }
     }
 
