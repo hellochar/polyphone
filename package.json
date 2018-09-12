@@ -6,7 +6,8 @@
   "scripts": {
     "start": "concurrently npm:start-*",
     "start-server": "node server/index.js",
-    "start-webpack-dev-server": "webpack-dev-server --config client/webpack.config.js"
+    "start-webpack-dev-server": "webpack-dev-server --config client/webpack.config.js",
+    "docs": "webpack --config client/webpack.config.js"
   },
   "devDependencies": {
     "concurrently": "^4.0.1",
