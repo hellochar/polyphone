@@ -7,7 +7,7 @@ module.exports = {
   mode: "development",
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: path.join(__dirname, "../"),
+    contentBase: path.join(__dirname, ".."),
     disableHostCheck: true,
     host: "0.0.0.0",
     hot: true,

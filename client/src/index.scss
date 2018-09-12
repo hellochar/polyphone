@@ -13,3 +13,9 @@ $arial-family: Arial, Helvetica Neue, Helvetica, sans-serif;
 html {
     overflow: hidden;
 }
+
+.forest-container {
+    canvas {
+        position: absolute;
+    }
+}

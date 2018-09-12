@@ -5,6 +5,8 @@ import PostPass from "../post";
 import { getMyUserId } from "./userId";
 
 interface DatabaseSchema {
+    // unix ms to begin playback
+    audioPlaybackBegin: number;
     /**
      * Set of users in existence.
      */
@@ -32,6 +34,8 @@ export class ForestSketch {
     private diControls?: THREE.DeviceOrientationControls;
     private orbitControls?: THREE.OrbitControls;
     public users: Map<string, User> = new Map();
+    // public audio: AudioPlayer;
+
     get aspectRatio() {
         return this.renderer.domElement.height / this.renderer.domElement.width;
     }
@@ -67,6 +71,8 @@ export class ForestSketch {
         this.setupUsersListeners();
 
         requestAnimationFrame(this.animate);
+
+        // this.audio.prepare();
     }
 
     private syncUsersWithDatabase(dbUsers: DatabaseUsers) {
@@ -182,7 +188,7 @@ export class ForestSketch {
             this.self.rotation.copy(this.camera.rotation);
             this.self.pushSharedState();
         }
-        console.log(this.camera.rotation);
+        // console.log(this.camera.rotation);
         this.scene.animate();
         this.composer.render();
         requestAnimationFrame(this.animate);
@@ -196,7 +202,7 @@ export class ForestSketch {
         const parent = this.canvas.parentElement;
         if (parent != null) {
             this.renderer.setSize(parent.clientWidth, parent.clientHeight);
-            console.log(parent.clientWidth, parent.clientHeight);
+            // console.log(parent.clientWidth, parent.clientHeight);
             if (this.camera != null) {
                 this.camera.aspect = 1 / this.aspectRatio;
                 this.camera.updateProjectionMatrix();

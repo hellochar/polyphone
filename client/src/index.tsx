@@ -2,22 +2,23 @@ import "./forest/monkeypatchThree";
 
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import io from "socket.io-client";
 import * as firebase from "firebase";
 
 import { Forest } from "./forest";
 
 import "./index.scss";
 
+const isAdmin = location.search.indexOf("admin") !== -1;
+
 class App extends React.Component<{db: firebase.database.Database}, {}> {
     render() {
         return (
             <>
-                <Forest db={db} />
-                <div style={{position: "relative"}}>
+                <Forest isAdmin={isAdmin} db={db} />
+                {/* <div style={{position: "relative"}}>
                     <h1>Polyphone.io</h1>
                     <FooListener db={db}/>
-                </div>
+                </div> */}
             </>
         );
     }
@@ -65,9 +66,6 @@ const FooRenderer: React.StatelessComponent<{val: any}> = ({ val }) => (
     </div>
 );
 
-// const server = io();
-// server.send("hello");
-
 const config = {
     apiKey: "AIzaSyBT3hTYRj0u-ApZE1_Z1fyXf2ZiV9mgXr0",
     authDomain: "polyphone-io.firebaseapp.com",
@@ -79,19 +77,7 @@ const config = {
 firebase.initializeApp(config);
 
 const db = firebase.database();
-console.log(db);
-
-// const fooRef = db.ref("foo");
-// fooRef.on("value", (snapshot) => {
-//     if (snapshot != null) {
-//         snapshot.val;
-//     }
-// });
 
 const root = document.getElementById("root");
 
-try {
-    ReactDOM.render(<App db={db} />, root);
-} catch (e) {
-    root!.innerHTML = JSON.stringify(e);
-}
+ReactDOM.render(<App db={db} />, root);
