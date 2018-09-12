@@ -1,11 +1,11 @@
+import "./forest/monkeypatchThree";
+
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import io from "socket.io-client";
 import * as firebase from "firebase";
 
 import { Forest } from "./forest";
-
-import "./forest/monkeypatchThree";
 
 import "./index.scss";
 
@@ -90,4 +90,8 @@ const db = firebase.database();
 
 const root = document.getElementById("root");
 
-ReactDOM.render(<App db={db} />, root);
+try {
+    ReactDOM.render(<App db={db} />, root);
+} catch (e) {
+    root!.innerHTML = JSON.stringify(e);
+}

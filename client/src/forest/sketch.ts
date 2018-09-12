@@ -1,5 +1,7 @@
 import * as THREE from "three";
 
+import PostPass from "../post";
+
 interface Thing extends THREE.Object3D {
     animate(): void;
 }
@@ -9,7 +11,8 @@ export class ForestSketch {
     public scene = new ForestScene();
     public camera: THREE.PerspectiveCamera;
     private composer: THREE.EffectComposer;
-    private controls: THREE.DeviceOrientationControls;
+    private diControls?: THREE.DeviceOrientationControls;
+    private orbitControls?: THREE.OrbitControls;
     get aspectRatio() {
         return this.renderer.domElement.height / this.renderer.domElement.width;
     }
@@ -25,7 +28,15 @@ export class ForestSketch {
 
         this.camera = new THREE.PerspectiveCamera(60, 1 / this.aspectRatio, 1, 5000);
 
-        this.controls = new THREE.DeviceOrientationControls(this.camera);
+        this.orbitControls = new THREE.OrbitControls(this.camera, this.canvas);
+        window.addEventListener("deviceorientation", (evt) => {
+            if (evt.alpha && evt.gamma && evt.beta) {
+                this.diControls = new THREE.DeviceOrientationControls(this.camera);
+                this.orbitControls = undefined;
+            }
+        }, {
+            once: true,
+        });
 
         this.composer = this.initComposer();
 
@@ -60,14 +71,14 @@ export class ForestSketch {
         // ssaa.sampleLevel = 2;
         // composer.addPass(ssaa);
 
-        const sao = new THREE.SAOPass(this.scene, this.camera, false, true);
-        // sao.params.output = THREE.SAOPass.OUTPUT.SAO;
-        sao.params.saoBias = 0.2;
-        sao.params.saoIntensity = 0.030;
-        sao.params.saoScale = 90;
-        sao.params.saoKernelRadius = 40;
-        sao.params.saoBlur = true;
-        composer.addPass(sao);
+        // const sao = new THREE.SAOPass(this.scene, this.camera, false, true);
+        // // sao.params.output = THREE.SAOPass.OUTPUT.SAO;
+        // sao.params.saoBias = 0.2;
+        // sao.params.saoIntensity = 0.030;
+        // sao.params.saoScale = 90;
+        // sao.params.saoKernelRadius = 40;
+        // sao.params.saoBlur = true;
+        // composer.addPass(sao);
 
         const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(this.canvas.width, this.canvas.height), 0.4, 0.7, 0.85);
         composer.addPass(bloomPass);
@@ -75,15 +86,20 @@ export class ForestSketch {
         // const adaptiveToneMappingPass = new THREE.AdaptiveToneMappingPass(true, 256);
         // composer.addPass(adaptiveToneMappingPass);
 
-        // const post = new PostPass();
-        // composer.addPass(post);
+        const post = new PostPass();
+        composer.addPass(post);
 
         composer.passes[composer.passes.length - 1].renderToScreen = true;
         return composer;
     }
 
     public animate = (millisDt: number) => {
-        this.controls.update();
+        if (this.diControls) {
+            this.diControls.update();
+        }
+        if (this.orbitControls) {
+            this.orbitControls.update();
+        }
         this.scene.animate();
         this.composer.render(millisDt);
         requestAnimationFrame(this.animate);
