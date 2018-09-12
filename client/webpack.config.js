@@ -7,7 +7,7 @@ module.exports = {
   mode: "development",
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: path.join(__dirname, "../docs"),
+    contentBase: path.join(__dirname, "../"),
     disableHostCheck: true,
     host: "0.0.0.0",
     hot: true,
@@ -19,7 +19,7 @@ module.exports = {
   },
   output: {
     publicPath: "/",
-    path: path.resolve(__dirname, "../docs"),
+    path: path.resolve(__dirname, "../"),
     filename: "[name].js",
     chunkFilename: '[name].bundle.js',
   },
