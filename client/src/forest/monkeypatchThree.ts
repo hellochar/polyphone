@@ -10,6 +10,7 @@ import "three/examples/js/postprocessing/EffectComposer";
 
 import "three/examples/js/controls/OrbitControls";
 import "three/examples/js/controls/PointerLockControls";
+import "three/examples/js/controls/DeviceOrientationControls";
 
 import "three/examples/js/libs/stats.min";
 // import * as dat from "three/examples/js/libs/dat.gui.min";
