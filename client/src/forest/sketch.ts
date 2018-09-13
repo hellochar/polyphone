@@ -218,12 +218,12 @@ export class ForestSketch {
                 if (this.camera.parent == null) {
                     this.self.add(this.camera);
                     this.camera.position.set(0, 50, 50);
-                    this.camera.position.setLength(100);
+                    this.camera.position.setLength(200);
                     this.camera.lookAt(this.self.position.x, this.self.position.y + 25, this.self.position.z);
                 }
                 this.self.quaternion.copy(this.dummyCamera.quaternion);
                 if (this.touches > 0) {
-                    this.self.move(0, 0, -5);
+                    this.self.move(0, 0, -2);
                 }
                 this.self.pushSharedState();
             }
