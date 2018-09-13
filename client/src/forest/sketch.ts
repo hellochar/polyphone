@@ -41,6 +41,7 @@ export class ForestSketch {
     // public audio: AudioPlayer;
 
     private dummyCamera = new THREE.PerspectiveCamera();
+    private keys: Set<number> = new Set();
 
     get aspectRatio() {
         return this.renderer.domElement.height / this.renderer.domElement.width;
@@ -94,6 +95,12 @@ export class ForestSketch {
         });
         this.canvas.addEventListener("touchend", () => {
             this.touches--;
+        });
+        document.addEventListener("keydown", (evt) => {
+            this.keys.add(evt.keyCode);
+        });
+        document.addEventListener("keyup", (evt) => {
+            this.keys.delete(evt.keyCode);
         });
     }
 
@@ -224,6 +231,19 @@ export class ForestSketch {
                 this.self.quaternion.copy(this.dummyCamera.quaternion);
                 if (this.touches > 0) {
                     this.self.move(0, 0, -2);
+                }
+                console.log(this.keys);
+                if (this.keys.has(37)) { // left
+                    this.self.move(-2, 0, 0);
+                }
+                if (this.keys.has(38)) { // up
+                    this.self.move(0, 0, -2);
+                }
+                if (this.keys.has(39)) { // right
+                    this.self.move(2, 0, 0);
+                }
+                if (this.keys.has(40)) { // down
+                    this.self.move(0, 0, 2);
                 }
                 this.self.pushSharedState();
             }
