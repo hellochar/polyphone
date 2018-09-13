@@ -52,10 +52,12 @@ export class AudioManager {
         } else {
             // we're already playing
             const curPosition = (Date.now() - playbackBegin) / 1000;
-            this.audioClip.element.currentTime = curPosition;
             this.audioClip.play();
+            this.audioClip.element.currentTime = curPosition;
         }
     }
 
-
+    public isPlaying() {
+        return !this.audioClip.element.paused;
+    }
 }

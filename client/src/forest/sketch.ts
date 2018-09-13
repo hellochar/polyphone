@@ -4,6 +4,7 @@ import * as THREE from "three";
 import PostPass from "../post";
 import { getMyUserId } from "./userId";
 import { AudioManager } from "./audioManager";
+import { Noise } from "../common/noise";
 
 let frequencyAmplitudes: Uint8Array;
 
@@ -32,7 +33,7 @@ interface Thing extends THREE.Object3D {
 
 export class ForestSketch {
     public renderer: THREE.WebGLRenderer;
-    public scene = new ForestScene();
+    public scene: ForestScene;
     public camera: THREE.PerspectiveCamera;
     private composer: THREE.EffectComposer;
     private diControls?: THREE.DeviceOrientationControls;
@@ -55,11 +56,12 @@ export class ForestSketch {
         frequencyAmplitudes = this.audioManager.getFrequencyAmplitudes();
         (window as any).sketch = this;
         this.renderer = this.initRenderer();
+        this.scene = new ForestScene(this);
 
         this.updateCanvasSize();
         window.addEventListener("resize", () => {
             this.updateCanvasSize();
-        })
+        });
 
         this.camera = new THREE.PerspectiveCamera(60, 1 / this.aspectRatio, 1, 5000);
         // this.scene.add(this.camera);
@@ -274,8 +276,9 @@ export class ForestSketch {
 
 class ForestScene extends THREE.Scene implements Thing {
     things: Thing[] = [];
+    private sky: Sky;
 
-    constructor() {
+    constructor(public sketch: ForestSketch) {
         super();
 
         this.things.push(new Ground());
@@ -284,14 +287,19 @@ class ForestScene extends THREE.Scene implements Thing {
         const lights = new Lights();
         this.things.push(lights);
 
-        const sky = new Sky();
-        sky.sky.material.uniforms.sunPosition.value.copy(lights.light1.position);
-        this.things.push(sky);
+        this.sky = new Sky();
+        this.sky.sky.material.uniforms.sunPosition.value.copy(lights.light1.position);
+        this.things.push(this.sky);
 
         this.add(...this.things);
     }
 
     animate() {
+        if (this.sketch.audioManager.isPlaying()) {
+            this.sky.setNightTime();
+        } else {
+            this.sky.setDayTime();
+        }
         for(const t of this.things) {
             t.animate();
         }
@@ -299,8 +307,10 @@ class ForestScene extends THREE.Scene implements Thing {
 }
 
 class Ground extends THREE.Mesh implements Thing {
+    private noise: Noise;
+    private t: number;
     constructor() {
-        const geom = new THREE.PlaneBufferGeometry(1000, 1000, 10, 10);
+        const geom = new THREE.PlaneGeometry(1000, 1000, 50, 50);
         geom.rotateX(-Math.PI / 2);
         const material = new THREE.MeshStandardMaterial({
             roughness: 1,
@@ -309,12 +319,19 @@ class Ground extends THREE.Mesh implements Thing {
             metalness: 0,
         });
         super(geom, material);
-        this.position.y = -500;
+        this.noise = new Noise(0);
+        this.t = 0;
+        this.position.y = -200;
         this.castShadow = true;
         this.receiveShadow = true;
     }
 
     animate() {
+        this.t += frequencyAmplitudes[0] / 255 / 100;
+        for (const vertex of (this.geometry as THREE.PlaneGeometry).vertices) {
+            vertex.y = this.noise.simplex3(vertex.x / 250, vertex.z / 250, this.t) * 250 * (frequencyAmplitudes[0] / 255);
+        }
+        (this.geometry as THREE.PlaneGeometry).verticesNeedUpdate = true;
     }
 }
 
@@ -403,14 +420,29 @@ class Sky extends THREE.Object3D implements Thing {
         super();
         this.sky = new THREE.Sky();
         this.sky.scale.setScalar(500000);
+        this.setDayTime();
+
+        this.add(this.sky);
+    }
+
+    setDayTime() {
         const uniforms = this.sky.material.uniforms;
         uniforms.turbidity.value = 1;
         uniforms.rayleigh.value = 0.8;
         uniforms.mieCoefficient.value = 0.03;
         uniforms.mieDirectionalG.value = 0.87;
         uniforms.luminance.value = 1.01;
+    }
 
-        this.add(this.sky);
+    setNightTime() {
+        const uniforms = this.sky.material.uniforms;
+        // turbidity affects how brightly the sun/moon shines. You want turbidity ~8 for nighttime.
+        uniforms.turbidity.value = 5;
+        // rayleigh is the big thing that affects "daytime" or "nighttime". rayleigh 0 = full night, rayleigh 1 = full day
+        uniforms.rayleigh.value = 0.0;
+
+        uniforms.mieCoefficient.value = 0.012;
+        uniforms.mieDirectionalG.value = 0.70;
     }
 
     animate() {
