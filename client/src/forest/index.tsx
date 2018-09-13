@@ -56,10 +56,7 @@ export class Forest extends React.Component<{db: database.Database, isAdmin?: bo
                 <div className="admin">
                     <h2>polyphone.io admin</h2>
                     <p>
-                        23 people connected.
-                    </p>
-                    <p>
-                        Six songs prepared: Burn the Witch, Separator, Jigsaw Falling Into Place, Where I End and You Begin, I Might Be Wrong, Idioteque
+                        23 people connected. Song 1 of 6. 
                     </p>
                     {this.renderPlaybackState()}
                 </div>

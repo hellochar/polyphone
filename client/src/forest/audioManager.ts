@@ -7,7 +7,7 @@ export class AudioManager {
     private analyserFrequencyAmplitudes: Uint8Array;
 
     constructor() {
-        const contextConstructor = AudioContext || (window as any).webkitAudioContext;
+        const contextConstructor = (window as any).AudioContext || (window as any).webkitAudioContext;
         this.context = new contextConstructor();
         this.analyser = this.context.createAnalyser();
         this.analyser.smoothingTimeConstant = 0.1;

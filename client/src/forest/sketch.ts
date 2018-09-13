@@ -23,6 +23,7 @@ interface DatabaseUsers {
 interface DatabaseUser {
     position: { x: number, y: number, z: number },
     rotation: { x: number, y: number, z: number },
+    color: number,
 }
 
 interface Thing extends THREE.Object3D {
@@ -38,6 +39,8 @@ export class ForestSketch {
     private orbitControls?: THREE.OrbitControls;
     public users: Map<string, User> = new Map();
     // public audio: AudioPlayer;
+
+    private dummyCamera = new THREE.PerspectiveCamera();
 
     get aspectRatio() {
         return this.renderer.domElement.height / this.renderer.domElement.width;
@@ -58,11 +61,14 @@ export class ForestSketch {
         })
 
         this.camera = new THREE.PerspectiveCamera(60, 1 / this.aspectRatio, 1, 5000);
+        // this.scene.add(this.camera);
+        // this.dummyCamera = new THREE.PerspectiveCamera(60, 1 / this.aspectRatio, 1, 5000);
+        // this.scene.add(this.dummyCamera);
 
-        this.orbitControls = new THREE.OrbitControls(this.camera, this.canvas);
+        this.orbitControls = new THREE.OrbitControls(this.dummyCamera, this.canvas);
         window.addEventListener("deviceorientation", (evt) => {
             if (evt.alpha && evt.gamma && evt.beta) {
-                this.diControls = new THREE.DeviceOrientationControls(this.camera);
+                this.diControls = new THREE.DeviceOrientationControls(this.dummyCamera);
                 this.orbitControls = undefined;
             }
         }, {
@@ -76,7 +82,19 @@ export class ForestSketch {
 
         requestAnimationFrame(this.animate);
 
+        this.setupEvents();
+
         // this.audio.prepare();
+    }
+
+    private touches = 0;
+    private setupEvents() {
+        this.canvas.addEventListener("touchstart", () => {
+            this.touches++;
+        });
+        this.canvas.addEventListener("touchend", () => {
+            this.touches--;
+        });
     }
 
     private syncUsersWithDatabase(dbUsers: DatabaseUsers) {
@@ -105,14 +123,15 @@ export class ForestSketch {
             const newUser: DatabaseUser = {
                 position: {
                     x: THREE.Math.randFloat(-200, 200),
-                    y: THREE.Math.randFloat(-200, 200),
+                    y: THREE.Math.randFloat(0, 20),
                     z: THREE.Math.randFloat(-200, 200),
                 },
                 rotation: {
                     x: 0,
                     y: 0,
                     z: 0,
-                }
+                },
+                color: (new THREE.Color(Math.random(), Math.random(), Math.random())).getHex(),
             };
             await myUserRef.set(newUser);
         } catch (e) {
@@ -181,22 +200,39 @@ export class ForestSketch {
     }
 
     public animate = (millisDt: number) => {
-        this.audioManager.update();
-        if (this.diControls) {
-            this.diControls.update();
+        try {
+            this.audioManager.update();
+            if (this.diControls) {
+                this.diControls.update();
+            }
+            if (this.orbitControls) {
+                this.orbitControls.update();
+            }
+            // console.log(this.camera.rotation);
+            this.scene.animate();
+            for (const user of this.users.values()) {
+                user.animate();
+            }
+            
+            if (this.self != null) {
+                if (this.camera.parent == null) {
+                    this.self.add(this.camera);
+                    this.camera.position.set(0, 50, 50);
+                    this.camera.position.setLength(100);
+                    this.camera.lookAt(this.self.position.x, this.self.position.y + 25, this.self.position.z);
+                }
+                this.self.quaternion.copy(this.dummyCamera.quaternion);
+                if (this.touches > 0) {
+                    this.self.move(0, 0, -5);
+                }
+                this.self.pushSharedState();
+            }
+
+            this.composer.render();
+            requestAnimationFrame(this.animate);
+        } catch (e) {
+            document.body.innerText = `Error: ${e.name} - ${e.message}. ${e.stack}`;
         }
-        if (this.orbitControls) {
-            this.orbitControls.update();
-        }
-        if (this.self != null) {
-            this.camera.position.copy(this.self.position);
-            this.self.rotation.copy(this.camera.rotation);
-            this.self.pushSharedState();
-        }
-        // console.log(this.camera.rotation);
-        this.scene.animate();
-        this.composer.render();
-        requestAnimationFrame(this.animate);
     };
 
     dispose() {
@@ -363,10 +399,11 @@ class Sky extends THREE.Object3D implements Thing {
 }
 
 class User extends THREE.Mesh implements Thing {
-    private static geometry = new THREE.TorusKnotBufferGeometry(10, 3, 100, 16);
-    private static material = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 1, });
+    private static geometry = new THREE.TorusKnotBufferGeometry(20, 3, 100, 16);
     constructor(public myRef: database.Reference) {
-        super(User.geometry, User.material);
+        super(User.geometry, new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.5, roughness: 0.5 }));
+        this.castShadow = true;
+        this.receiveShadow = true;
         // this handles updating
         myRef.on("value", (snapshot) => {
             if (snapshot != null) {
@@ -393,6 +430,7 @@ class User extends THREE.Mesh implements Thing {
                     y: this.rotation.y,
                     z: this.rotation.z,
                 },
+                color: (this.material as THREE.MeshStandardMaterial).color.getHex(),
             };
             await this.myRef.set(newUser);
         } catch (e) {
@@ -400,11 +438,24 @@ class User extends THREE.Mesh implements Thing {
         }
     }
 
-    private updateSharedState(databaseUser: DatabaseUser) {
-        const { position, rotation } = databaseUser;
-        this.position.set(position.x, position.y, position.z);
-        this.rotation.set(rotation.x, rotation.y, rotation.z);
+    public move(dx: number, dy: number, dz: number) {
+        const newPosition = this.localToWorld(new THREE.Vector3(dx, dy, dz));
+        this.position.copy(newPosition);
     }
 
-    animate() { }
+    private updateSharedState(databaseUser: DatabaseUser) {
+        const { position, rotation, color } = databaseUser;
+        this.position.set(position.x, position.y, position.z);
+        this.rotation.set(rotation.x, rotation.y, rotation.z);
+        if ((this.material as THREE.MeshStandardMaterial).color.getHex() !==
+            color) {
+            (this.material as THREE.MeshStandardMaterial).color.setHex(color);
+            (this.material as THREE.MeshStandardMaterial).needsUpdate = true;
+        }
+    }
+
+    animate() {
+        // const scale = THREE.Math.mapLinear(frequencyAmplitudes[8], 0, 255, 0.5, 2);
+        // this.scale.setScalar(scale);
+    }
 }

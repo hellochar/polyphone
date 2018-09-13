@@ -80,4 +80,10 @@ const db = firebase.database();
 
 const root = document.getElementById("root");
 
-ReactDOM.render(<App db={db} />, root);
+try {
+    ReactDOM.render(<App db={db} />, root);
+} catch (e) {
+    if (e instanceof Error) {
+        root!.innerText = `Error: ${e.name} - ${e.message}. ${e.stack}`;
+    }
+}
