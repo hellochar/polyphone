@@ -6,18 +6,26 @@ export class AudioManager {
     private analyser: AnalyserNode;
     private analyserFrequencyAmplitudes: Uint8Array;
 
-    constructor() {
+    constructor(playSound: boolean) {
         const contextConstructor = (window as any).AudioContext || (window as any).webkitAudioContext;
         this.context = new contextConstructor();
+
         this.analyser = this.context.createAnalyser();
         this.analyser.smoothingTimeConstant = 0.1;
+
+        // const gain = this.context.createGain();
+        // gain.gain.setValueAtTime(0, 0);
+        // gain.connect(this.context.destination);
+
         this.audioClip = new AudioClip({
             autoplay: false,
             context: this.context,
             srcs: ["june_3rd.mp3", "june_3rd.wav"],
         });
         this.audioClip.node!.connect(this.analyser);
-        this.audioClip.node!.connect(this.context.destination);
+        if (playSound) {
+            this.audioClip.node!.connect(this.context.destination);
+        }
 
         this.analyser.fftSize = 2048;
         this.analyserFrequencyAmplitudes = new Uint8Array(this.analyser.frequencyBinCount);

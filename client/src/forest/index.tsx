@@ -10,9 +10,12 @@ export class Forest extends React.Component<{db: database.Database, isAdmin?: bo
         audioPlaybackBegin: -1,
     };
     private playbackBeginRef: database.Reference;
-    private audioManager = new AudioManager();
+    private audioManager: AudioManager;
     constructor(props: any, context: any) {
         super(props, context);
+
+        this.audioManager = new AudioManager(!!this.props.isAdmin);
+
         this.playbackBeginRef = this.props.db.ref("audioPlaybackBegin");
         this.playbackBeginRef.on("value", (snapshot) => {
             if (snapshot != null) {
