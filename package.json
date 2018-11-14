@@ -5,9 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "concurrently npm:start-*",
-    "start-server": "node server/index.js",
-    "start-webpack-dev-server": "webpack-dev-server --config client/webpack.config.js",
-    "docs": "webpack --config client/webpack.config.js"
+    "start-webpack-dev-server": "webpack-dev-server",
+    "docs": "webpack"
   },
   "devDependencies": {
     "concurrently": "^4.0.1",
