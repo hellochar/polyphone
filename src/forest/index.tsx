@@ -29,7 +29,7 @@ export class Forest extends React.Component<{db: database.Database, isAdmin?: bo
     private handleCanvasRef = (canvas: HTMLCanvasElement | null) => {
         if (canvas == null) {
             if (this.sketch != null) {
-                this.sketch.dispose();
+                // this.sketch.dispose();
             }
         } else {
             this.sketch = new ForestSketch(this.props.db, this.audioManager, canvas);
