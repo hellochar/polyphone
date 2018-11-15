@@ -52,14 +52,19 @@ html {
         }
     }
 
+    .landing-page-join-container {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        z-index: 1;
+    }
+
     .landing-page-join {
-        margin-top: 1em;
+        display: block;
         padding: 50px;
-        width: 100%;
         font-size: 2em;
         border-radius: 2px;
-        background: none;
-        border: none;
         background: $white;
         box-shadow: 5px 5px 2px 3px transparentize($gray3, 0.75);
         position: relative;
