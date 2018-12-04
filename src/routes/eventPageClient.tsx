@@ -67,6 +67,6 @@ export class EventPageClient extends React.Component<ClientProps, ClientState> {
         if (gameState == null || user == null) {
             return null;
         }
-        return <UserState gameStateRef={this.gameStateRef} gameState={gameState} user={user} />
+        return <UserState key={gameState.gameId} gameStateRef={this.gameStateRef} gameState={gameState} user={user} />
     }
 }

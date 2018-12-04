@@ -30,13 +30,15 @@ export class RedvsBlueUser extends React.Component<RedVsBlueUserProps, {}> {
         this.myTeamPointsRef = props.gameStateRef.child(myTeamPointsRefUrl);
     }
 
-    private handleTouch = () => {
+    private handleTouch = (e: React.SyntheticEvent) => {
+        e.preventDefault();
         this.setState({
             numTaps: this.state.numTaps + 1,
         });
         this.myTeamPointsRef.transaction((val: number) => {
             return val + 1;
         });
+        return false;
     };
 
     componentDidMount() {
@@ -82,7 +84,7 @@ export class RedvsBlueUser extends React.Component<RedVsBlueUserProps, {}> {
         // game is currently in play
         else if (this.state.currentTime >= gameState.timeGameStart && this.state.currentTime < gameState.timeGameStart + gameState.gameDuration) {
             return (
-                <div className="rvb-user-tap-collector" onTouchStart={this.handleTouch} onMouseDown={this.handleTouch}>
+                <div className="rvb-user-tap-collector" onClick={this.handleTouch}>
                     <div className="rvb-user-tap-button">{this.state.numTaps}</div>
                 </div>
             );

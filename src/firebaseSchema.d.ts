@@ -27,6 +27,7 @@ export interface DatabaseEvent {
 export type DatabaseGameState = DatabaseGameStateRedVsBlue;
 
 export interface DatabaseGameStateRedVsBlue {
+    gameId: string;
     type: "redvsblue";
     redPoints: number;
     bluePoints: number;

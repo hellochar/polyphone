@@ -9,9 +9,15 @@ import { HomePage } from "./routes/homePage";
 export class App extends React.Component<{}, {}> {
     render() {
         return (
+            <>
             <HashRouter>
                 <Routes />
             </HashRouter>
+            {/* <div className="join-indicator">
+                <img className="qr-code" src="/assets/qr-code.png" />
+                <div>Join by visiting <a href="">polyphone.io</a> on your phone!</div>
+            </div> */}
+            </>
         );
     }
 };

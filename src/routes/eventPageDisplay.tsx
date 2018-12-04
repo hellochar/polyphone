@@ -58,6 +58,6 @@ export class EventPageDisplay extends React.Component<EventPageDisplayProps, Eve
         if (event == null) {
             return null;
         }
-        return <GameState gameState={event.gameState} />
+        return <GameState key={event.gameState.gameId} gameState={event.gameState} />
     }
 }

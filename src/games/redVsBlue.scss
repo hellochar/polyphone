@@ -1,0 +1,153 @@
+$rvb-red: red;
+$rvb-blue: lightblue;
+
+.rvb {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    // background: linear-gradient(90deg, rgba(255, 0, 0, 1) 0%, rgba(237, 11, 17, 1) 47%, rgba(53, 127, 190, 1) 53%, rgba(35, 138, 207, 1) 100%);
+
+    .rvb-countdown {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: auto;
+    }
+
+    .rvb-instructions {
+        font-size: 1.5em;
+    }
+
+    .rvb-team {
+        flex-basis: 50%;
+        text-align: center;
+        height: 100%;
+        display: flex;
+
+        &.rvb-red {
+            background: $rvb-red;
+        }
+
+        &.rvb-blue {
+            background: $rvb-blue;
+        }
+
+        .rvb-score-container {
+            margin: auto;
+
+            .rvb-team-name {
+                font-size: 3em;
+            }
+
+            .rvb-team-points {
+                font-size: 15em;
+                margin: 0.25em;
+            }
+        }
+    }
+
+    .rvb-timer {
+        position: absolute;
+        font-size: 2em;
+        left: 0;
+        right: 0;
+        text-align: center;
+        bottom: 1em;
+    }
+
+    .rvb-instructions {
+        position: absolute;
+        left: 0;
+        right: 0;
+        text-align: center;
+        top: 1em;
+    }
+
+    .rvb-ended {
+        width: 100%;
+        height: 100%;
+        display: flex;
+
+        &.rvb-win-blue {
+            background: $rvb-blue;
+        }
+
+        &.rvb-win-red {
+            background: $rvb-red;
+        }
+
+        .rvb-ended-container {
+            margin: auto;
+        }
+
+        .rvb-winner-score-container {
+            font-size: 3em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .rvb-loser-score-container {
+            text-align: center;
+        }
+
+        .rvb-winner-banner {
+            font-size: 4em;
+        }
+    }
+}
+
+.rvb-user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+}
+
+.rvb-user-team-red {
+    background: $rvb-red;
+}
+
+.rvb-user-team-blue {
+    background: $rvb-blue;
+}
+
+.rvb-user-tap-collector {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:active {
+        .rvb-user-tap-button {
+            top: 5px;
+            left: 5px;
+            box-shadow: 0 0 0 0 transparent;
+        }
+    }
+}
+
+.rvb-user-tap-button {
+    pointer-events: none;
+    user-select: none;
+    font-size: 7em;
+    width: 3em;
+    height: 3em;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3em;
+
+    box-shadow: 5px 5px 2px 3px transparentize($gray3, 0.5);
+    position: relative;
+    top: 0;
+    left: 0;
+    transition: all 0.1s;
+}

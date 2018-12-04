@@ -42,8 +42,9 @@ export class RedVsBlue extends React.Component<RedVsBlueProps, RedVsBlueState> {
             const millisRemaining = gameState.timeGameStart - this.state.currentTime;
             return (
                 <div className="rvb-countdown">
-                    <h2>Game starts in</h2>
-                    <h1>{Math.ceil(millisRemaining / 1000)}</h1>
+                    <h1 className="rvb-countdown-title">Red vs Blue</h1>
+                    <p className="rvb-countdown-instructions">Tap your screen as fast as possible to earn points for your team. Most points wins!</p>
+                    <h1 className="rvb-countdown-indicator">Starts in <span className="rvb-countdown-time">{Math.ceil(millisRemaining / 1000)}</span>...</h1>
                 </div>
             );
         }
@@ -52,15 +53,20 @@ export class RedVsBlue extends React.Component<RedVsBlueProps, RedVsBlueState> {
             const millisRemaining = gameState.timeGameStart + gameState.gameDuration - this.state.currentTime;
             return (
                 <>
-                    <div className="rvb-red">
-                        <h1>Red</h1>
-                        <h2>{gameState.redPoints}</h2>
+                    <p className="rvb-instructions">Tap your screen as fast as possible to earn points for your team. Most points wins!</p>
+                    <div className="rvb-team rvb-red">
+                        <div className="rvb-score-container">
+                            <h1 className="rvb-team-name">Red</h1>
+                            <h2 className="rvb-team-points">{gameState.redPoints}</h2>
+                        </div>
                     </div>
-                    <div className="rvb-blue">
-                        <h1>Blue</h1>
-                        <h2>{gameState.bluePoints}</h2>
+                    <div className="rvb-team rvb-blue">
+                        <div className="rvb-score-container">
+                            <h1 className="rvb-team-name">Blue</h1>
+                            <h2 className="rvb-team-points">{gameState.bluePoints}</h2>
+                        </div>
                     </div>
-                    <div className="rvb-timer">{Math.ceil(millisRemaining / 1000)}</div>
+                    <div className="rvb-timer">00:{Math.ceil(millisRemaining / 1000)} remaining</div>
                 </>
             );
         }
@@ -87,8 +93,10 @@ export class RedVsBlue extends React.Component<RedVsBlueProps, RedVsBlueState> {
             if (result.type === "tie") {
                 return (
                     <div className="rvb-ended rvb-tie">
-                        <h1>It's a tie!</h1>
-                        Both teams scored {result.points}! Incredible!
+                        <div className="rvb-ended-container">
+                            <h1>It's a tie!</h1>
+                            Both teams scored {result.points}! Incredible!
+                        </div>
                     </div>
                 );
             } else {
@@ -98,12 +106,14 @@ export class RedVsBlue extends React.Component<RedVsBlueProps, RedVsBlueState> {
                 });
                 return (
                     <div className={className}>
-                        <h1>{result.winningTeam} team wins!</h1>
-                        <div className="rvb-winner-score-container">
-                            <span className="rvb-winner-score">{result.winningPoints}</span> taps!
-                        </div>
-                        <div className="rvb-loser-score-container">
-                            <span className="rvb-loser">{result.losingTeam}</span> <span className="rvb-loser-score">{result.losingPoints}</span> taps! Nice try!
+                        <div className="rvb-ended-container">
+                            <h1 className="rvb-winner-banner">{result.winningTeam} team wins!</h1>
+                            <h2 className="rvb-winner-score-container">
+                                <span className="rvb-winner-score">{result.winningPoints}</span> points!
+                            </h2>
+                            <div className="rvb-loser-score-container">
+                                <span className="rvb-loser">{result.losingTeam}</span> team <span className="rvb-loser-score">{result.losingPoints}</span> points! Nice try!
+                            </div>
                         </div>
                     </div>
                 );
