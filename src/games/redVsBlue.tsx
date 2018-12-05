@@ -57,7 +57,7 @@ export class RedVsBlue extends React.Component<RedVsBlueProps, RedVsBlueState> {
             const millisRemaining = gameState.timeGameStart - this.state.currentTime;
             return (
                 <div className="rvb-countdown">
-                    <h1 className="rvb-countdown-title">Red vs Blue</h1>
+                    <h1 className="rvb-countdown-title"><span className="smaller">Next Up:</span> Red vs Blue</h1>
                     <div className="rvb-countdown-columns-container">
                         <div className="rvb-countdown-column rvb-countdown-side-column">
                             <img className="qr-small" src="/assets/qr-code.png" width="200px" />

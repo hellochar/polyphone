@@ -32,7 +32,13 @@ $rvb-blue: lightblue;
         animation-name: zoomIn;
 
         .rvb-countdown-title {
+            margin-top: 0;
             font-size: 5em;
+
+            .smaller {
+                font-size: 0.5em;
+                color: $gray2;
+            }
         }
 
         .rvb-countdown-columns-container {
