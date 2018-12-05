@@ -12,7 +12,7 @@ export const randomAnimate = (ref: HTMLElement | null) => {
                     ref.classList.remove(animName);
                 }, 1000);
             }
-        }, 5000);
+        }, 3000);
     }
 }
 

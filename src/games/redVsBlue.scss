@@ -105,14 +105,24 @@ $rvb-blue: lightblue;
             font-size: 6em;
             font-weight: bold;
             text-align: center;
+            display: inline-block;
+            position: relative;
+            animation-duration: 1000ms;
+            animation-fill-mode: both;
         }
 
         .rvb-loser-score-container {
             text-align: center;
+            font-size: 2em;
+        }
+
+        .rvb-loser-score {
+            font-weight: bold;
         }
 
         .rvb-winner-banner {
             font-size: 4em;
+            margin-bottom: 0;
         }
     }
 }

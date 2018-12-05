@@ -2,7 +2,6 @@ import classnames from "classnames";
 import * as React from "react";
 
 import { DatabaseUser, UserStateRedVsBlue, DatabaseGameStateRedVsBlue } from "src/firebaseSchema";
-import { addConfetti } from "../common/confetti";
 
 export interface RedVsBlueUserProps {
     gameStateRef: firebase.database.Reference;

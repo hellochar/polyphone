@@ -40,7 +40,7 @@ export class RedVsBlue extends React.Component<RedVsBlueProps, RedVsBlueState> {
     renderContent() {
         const { gameState } = this.props;
         // game hasn't started yet, show a countdown timer
-        if (false && this.state.currentTime < gameState.timeGameStart) {
+        if (this.state.currentTime < gameState.timeGameStart) {
             const millisRemaining = gameState.timeGameStart - this.state.currentTime;
             return (
                 <div className="rvb-countdown">
@@ -53,7 +53,7 @@ export class RedVsBlue extends React.Component<RedVsBlueProps, RedVsBlueState> {
             );
         }
         // game is currently in play
-        else if (false && this.state.currentTime >= gameState.timeGameStart && this.state.currentTime < gameState.timeGameStart + gameState.gameDuration) {
+        else if (this.state.currentTime >= gameState.timeGameStart && this.state.currentTime < gameState.timeGameStart + gameState.gameDuration) {
             const millisRemaining = gameState.timeGameStart + gameState.gameDuration - this.state.currentTime;
             return (
                 <div className="rvb-play">
@@ -117,8 +117,8 @@ export class RedVsBlue extends React.Component<RedVsBlueProps, RedVsBlueState> {
                     <div className={className}>
                         <div className="rvb-ended-container">
                             <h1 className="rvb-winner-banner">{result.winningTeam} team wins!</h1>
-                            <h2 className="rvb-winner-score-container">
-                                <span className="rvb-winner-score" ref={randomAnimate}>{result.winningPoints}</span> points!
+                            <h2 className="rvb-winner-score-container animated" ref={randomAnimate}>
+                                <span className="rvb-winner-score">{result.winningPoints}</span> points!
                             </h2>
                             <div className="rvb-loser-score-container">
                                 <span className="rvb-loser">{result.losingTeam}</span> team <span className="rvb-loser-score">{result.losingPoints}</span> points! Nice try!
