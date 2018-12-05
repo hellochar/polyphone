@@ -142,7 +142,7 @@ $rvb-blue: lightblue;
         display: flex;
         animation-duration: 2000ms;
         animation-fill-mode: both;
-        animation-name: fadeInDownBig;
+        animation-name: fadeIn;
 
         &.rvb-win-blue {
             background: $rvb-blue;
@@ -152,8 +152,28 @@ $rvb-blue: lightblue;
             background: $rvb-red;
         }
 
+        .rvb-tie-indicator {
+            font-size: 5em;
+        }
+
+        .rvb-tie-score {
+            font-size: 2em;
+
+            .rvb-tie-points {
+                animation-duration: 1s;
+                animation-fill-mode: both;
+                display: inline-block;
+                font-weight: bold;
+            }
+        }
+
+        .rvb-tie-incredible {
+            font-size: 2em;
+        }
+
         .rvb-ended-container {
             margin: auto;
+            text-align: center;
         }
 
         .rvb-winner-score-container {

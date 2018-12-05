@@ -109,9 +109,6 @@ export class RedVsBlue extends React.Component<RedVsBlueProps, RedVsBlueState> {
         else {
             addConfetti();
 
-            gameState.redPoints = 12;
-            gameState.bluePoints = 320;
-
             const result =
                 gameState.redPoints > gameState.bluePoints ? {
                     type: "win",
@@ -134,8 +131,10 @@ export class RedVsBlue extends React.Component<RedVsBlueProps, RedVsBlueState> {
                 return (
                     <div className="rvb-ended rvb-tie">
                         <div className="rvb-ended-container">
-                            <h1>It's a tie!</h1>
-                            Both teams scored {result.points}! Incredible!
+                            <h1 className="rvb-tie-indicator">It's a tie!</h1>
+                            <p className="rvb-tie-score">
+                                Both teams scored <span className="rvb-tie-points" ref={randomAnimate}>{result.points} points</span>! Incredible!
+                            </p>
                         </div>
                     </div>
                 );
