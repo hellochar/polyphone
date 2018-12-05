@@ -82,7 +82,7 @@ function createRedVsBlueGameState(): DatabaseGameStateRedVsBlue {
     return {
         gameId: Math.random().toString(16).substr(2),
         bluePoints: 0,
-        gameDuration: (5 * 60 + 30) * 1000,
+        gameDuration: (1 * 60 + 30) * 1000,
         redPoints: 0,
         timeGameStart: Date.now() + 20 * 1000,
         type: "redvsblue",

@@ -16,7 +16,7 @@ export interface RedVsBlueUserState {
     numTaps: number;
 }
 
-export class RedvsBlueUser extends React.Component<RedVsBlueUserProps, {}> {
+export class RedvsBlueUser extends React.PureComponent<RedVsBlueUserProps, {}> {
     private intervalId?: number;
     state = {
         currentTime: Date.now(),
@@ -27,6 +27,12 @@ export class RedvsBlueUser extends React.Component<RedVsBlueUserProps, {}> {
     
     constructor(props: RedVsBlueUserProps) {
         super(props);
+        const myTeamPointsRefUrl = props.user.state.team === "red" ? "redPoints" : "bluePoints";
+        this.myTeamPointsRef = props.gameStateRef.child(myTeamPointsRefUrl);
+    }
+
+    componentDidUpdate() {
+        const props = this.props;
         const myTeamPointsRefUrl = props.user.state.team === "red" ? "redPoints" : "bluePoints";
         this.myTeamPointsRef = props.gameStateRef.child(myTeamPointsRefUrl);
     }

@@ -32,9 +32,33 @@ html {
 //     }
 // }
 
+.confetti-container {
+    position: absolute;
+    width: 100%;
+    height: 110%;
+    user-select: none;
+    pointer-events: none;
+}
+
 .confetti {
-    animation-duration: 1s;
-    animation-name: floatOutwards;
+    position: absolute;
+    animation-duration: 15s;
+    animation-name: confettiFloatDown;
+    animation-timing-function: easeIn;
+}
+
+@keyframes confettiFloatDown {
+    from {
+        top: 0;
+        left: 0;
+        // transform: rotate(0);
+    }
+    
+    to {
+        top: 140%;
+        left: 10%;
+        // transform: rotate(360deg);
+    }
 }
 
 .landing-page-container {
