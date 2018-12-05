@@ -84,10 +84,10 @@ export class RedvsBlueUser extends React.PureComponent<RedVsBlueUserProps, {}> {
     renderContent() {
         const { gameState, user } = this.props;
         // game hasn't started yet, show instructions and your team
-        if (true || this.state.currentTime < gameState.timeGameStart) {
+        if (this.state.currentTime < gameState.timeGameStart) {
             const millisRemaining = gameState.timeGameStart - this.state.currentTime;
             return (
-                <div className="rvb-user-countdown">
+                <div className="rvb-user-countdown animated bounceIn">
                     <h3>Red vs Blue</h3>
                     <h1>You are on {this.props.user.state.team} team!</h1>
                     <p>Tap your screen as fast as possible to earn points for your team. Most points wins!</p>
@@ -100,21 +100,19 @@ export class RedvsBlueUser extends React.PureComponent<RedVsBlueUserProps, {}> {
         // game is currently in play
         else if (this.state.currentTime >= gameState.timeGameStart && this.state.currentTime < gameState.timeGameStart + gameState.gameDuration) {
             return (
-                <div className="rvb-user-tap-collector" onClick={this.handleTouch}>
+                <div className="rvb-user-tap-collector animated slideInRight" onClick={this.handleTouch}>
                     <div className="rvb-user-tap-button" ref={this.handleButtonRef}>{this.state.numTaps}</div>
                 </div>
             );
         }
         // game ended
         else {
-            gameState.redPoints = 3;
-            gameState.bluePoints = 20;
             const yourTeamPoints = user.state.team === "red" ? gameState.redPoints : gameState.bluePoints;
             const otherTeamPoints = user.state.team === "red" ? gameState.bluePoints : gameState.redPoints;
 
             if (yourTeamPoints === otherTeamPoints) {
                 return (
-                    <div className="rvb-user-ended rvb-user-tie">
+                    <div className="rvb-user-ended rvb-user-tie animated fadeIn">
                         <h1>It's a tie!</h1>
                         <p>
                         Holy moly! Both teams scored <span className="rvb-points">{yourTeamPoints} points!</span>
@@ -132,7 +130,7 @@ export class RedvsBlueUser extends React.PureComponent<RedVsBlueUserProps, {}> {
                     addConfetti();
                 }
                 return (
-                    <div className="rvb-user-ended">
+                    <div className="rvb-user-ended animated fadeIn">
                         <h1>Your team {result}</h1>
                         <p className="rvb-user-ended-matchup"><span className="rvb-points" ref={randomAnimate}>{yourTeamPoints}</span> to <span className="rvb-points" ref={randomAnimate}>{otherTeamPoints}</span></p>
                         <div className="rvb-user-ended-contribution-container">
