@@ -90,21 +90,26 @@ function createRedVsBlueGameState(): DatabaseGameStateRedVsBlue {
 }
 
 function createRedVsBlueUsers(userIds: string[], existingUsers: DatabaseUsers<UserStateRedVsBlue>): DatabaseUsers<UserStateRedVsBlue> {
-    // let numRed = 0, numBlue = 0;
-    // for (const userId in existingUsers) {
-    //     const user = existingUsers[userId];
-    //     user.state.team === "red" ? numRed++ : numBlue++;
-    // }
-    // return {
-    //     team
-    // }
+    let numRed = 0, numBlue = 0;
+    for (const userId in existingUsers) {
+        const user = existingUsers[userId];
+        user.state.team === "red" ? numRed++ : numBlue++;
+    }
     const newUsers: DatabaseUsers<UserStateRedVsBlue> = {};
     for (const id of userIds) {
+        const team = numRed > numBlue ? "blue" :
+                     numBlue > numRed ? "red" :
+                     Math.random() < 0.5 ? "red" : "blue";
         newUsers[id] = {
             state: {
-                team: Math.random() < 0.5 ? "red" : "blue",
+                team: team,
             },
-        }
+        };
+        if (team === "red") {
+            numRed++;
+         } else {
+            numBlue++;
+         }
     }
     return newUsers;
 }

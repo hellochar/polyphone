@@ -13,10 +13,47 @@ $rvb-blue: lightblue;
         flex-direction: column;
         align-items: center;
         margin: auto;
+        width: 100%;
 
-        animation-duration: 500ms;
+        animation-duration: 2000ms;
         animation-fill-mode: both;
-        animation-name: bounceInRight;
+        animation-name: zoomIn;
+
+        .rvb-countdown-title {
+            font-size: 5em;
+        }
+
+        .rvb-countdown-columns-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin: auto;
+            width: 100%;
+        }
+
+        .rvb-countdown-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: auto 10px;
+        }
+
+        .rvb-countdown-center-column {
+            flex-grow: 1;
+        }
+
+        .rvb-countdown-side-column {
+            width: 250px;
+            text-align: center;
+        }
+
+        .rvb-player-phone {
+            position: relative;
+            animation: movePhone 15s;
+            animation-iteration-count: infinite;
+            animation-direction: alternate-reverse;
+            margin: 10px;
+        }
     }
 
     .rvb-instructions {
@@ -124,6 +161,38 @@ $rvb-blue: lightblue;
             font-size: 4em;
             margin-bottom: 0;
         }
+    }
+}
+
+@keyframes movePhone {
+    0% {
+        left: 0;
+        top: 0;
+    }
+
+    20% {
+        left: 15px;
+        top: 7px;
+    }
+
+    40% {
+        left: 2px;
+        top: -12px;
+    }
+
+    60% {
+        left: -15px;
+        top: -7px;
+    }
+
+    80% {
+        left: -8px;
+        top: 12px;
+    }
+    
+    100% {
+        left: 0;
+        top: 0;
     }
 }
 
