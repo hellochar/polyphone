@@ -7,10 +7,12 @@ $rvb-blue: lightblue;
     height: 100%;
     width: 100%;
 
-    background: linear-gradient(273deg, #ff0000, #add8e6, #ff0000, #add8e6, #add8e6);
+    $light-rvb-red: transparentize($rvb-red, .80);
+    $light-rvb-blue: transparentize($rvb-blue, .50);
+    background: linear-gradient(273deg, $light-rvb-red, $light-rvb-blue, $light-rvb-red, $light-rvb-blue, $light-rvb-blue);
     background-size: 1000% 1000%;
 
-    animation: backgroundAnimation 24s ease infinite;
+    animation: backgroundAnimation 12s ease infinite;
 
     @keyframes backgroundAnimation { 
         0%{background-position:0% 19%}
