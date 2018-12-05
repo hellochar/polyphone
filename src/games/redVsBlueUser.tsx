@@ -84,21 +84,21 @@ export class RedvsBlueUser extends React.PureComponent<RedVsBlueUserProps, {}> {
     renderContent() {
         const { gameState, user } = this.props;
         // game hasn't started yet, show instructions and your team
-        if (false && this.state.currentTime < gameState.timeGameStart) {
+        if (true || this.state.currentTime < gameState.timeGameStart) {
             const millisRemaining = gameState.timeGameStart - this.state.currentTime;
             return (
-                <>
+                <div className="rvb-user-countdown">
                     <h3>Red vs Blue</h3>
                     <h1>You are on {this.props.user.state.team} team!</h1>
                     <p>Tap your screen as fast as possible to earn points for your team. Most points wins!</p>
-                    <div className="rvb-user-countdown">
+                    <div className="rvb-user-countdown-indicator">
                         Starting in {Math.ceil(millisRemaining / 1000)}... 
                     </div>
-                </>
+                </div>
             );
         }
         // game is currently in play
-        else if (false && this.state.currentTime >= gameState.timeGameStart && this.state.currentTime < gameState.timeGameStart + gameState.gameDuration) {
+        else if (this.state.currentTime >= gameState.timeGameStart && this.state.currentTime < gameState.timeGameStart + gameState.gameDuration) {
             return (
                 <div className="rvb-user-tap-collector" onClick={this.handleTouch}>
                     <div className="rvb-user-tap-button" ref={this.handleButtonRef}>{this.state.numTaps}</div>

@@ -251,6 +251,23 @@ $rvb-blue: lightblue;
     background: $rvb-blue;
 }
 
+.rvb-user-countdown {
+    text-align: center;
+
+    h1 {
+        font-size: 3em;
+    }
+
+    p {
+        margin: 3em 0;
+    }
+
+    .rvb-user-countdown-indicator {
+        margin-top: 1em;
+        font-weight: bold;
+    }
+}
+
 .rvb-user-tap-collector {
     position: absolute;
     left: 0;
