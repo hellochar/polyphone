@@ -240,6 +240,7 @@ $rvb-blue: lightblue;
     align-items: center;
     height: 100vh;
     padding: 20px;
+    font-size: 1.5em;
 }
 
 .rvb-user-team-red {
@@ -287,4 +288,32 @@ $rvb-blue: lightblue;
     top: 0;
     left: 0;
     transition: all 0.1s;
+}
+
+.rvb-user-ended {
+    margin: auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+
+    h1 {
+        font-size: 3em;
+        margin-top: -1em;
+    }
+
+    .rvb-user-ended-contribution-container {
+        margin-top: 20px;
+    }
+
+    .rvb-user-ended-matchup {
+        font-size: 3em;
+    }
+}
+
+.rvb-points {
+    font-weight: bold;
+    position: relative;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    display: inline-block;
 }

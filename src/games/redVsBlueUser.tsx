@@ -2,6 +2,8 @@ import classnames from "classnames";
 import * as React from "react";
 
 import { DatabaseUser, UserStateRedVsBlue, DatabaseGameStateRedVsBlue } from "src/firebaseSchema";
+import { addConfetti } from "../common/confetti";
+import { randomAnimate } from "../common/randomAnimate";
 
 export interface RedVsBlueUserProps {
     gameStateRef: firebase.database.Reference;
@@ -82,7 +84,7 @@ export class RedvsBlueUser extends React.PureComponent<RedVsBlueUserProps, {}> {
     renderContent() {
         const { gameState, user } = this.props;
         // game hasn't started yet, show instructions and your team
-        if (this.state.currentTime < gameState.timeGameStart) {
+        if (false && this.state.currentTime < gameState.timeGameStart) {
             const millisRemaining = gameState.timeGameStart - this.state.currentTime;
             return (
                 <>
@@ -96,7 +98,7 @@ export class RedvsBlueUser extends React.PureComponent<RedVsBlueUserProps, {}> {
             );
         }
         // game is currently in play
-        else if (this.state.currentTime >= gameState.timeGameStart && this.state.currentTime < gameState.timeGameStart + gameState.gameDuration) {
+        else if (false && this.state.currentTime >= gameState.timeGameStart && this.state.currentTime < gameState.timeGameStart + gameState.gameDuration) {
             return (
                 <div className="rvb-user-tap-collector" onClick={this.handleTouch}>
                     <div className="rvb-user-tap-button" ref={this.handleButtonRef}>{this.state.numTaps}</div>
@@ -105,28 +107,36 @@ export class RedvsBlueUser extends React.PureComponent<RedVsBlueUserProps, {}> {
         }
         // game ended
         else {
+            gameState.redPoints = 3;
+            gameState.bluePoints = 20;
             const yourTeamPoints = user.state.team === "red" ? gameState.redPoints : gameState.bluePoints;
             const otherTeamPoints = user.state.team === "red" ? gameState.bluePoints : gameState.redPoints;
-
 
             if (yourTeamPoints === otherTeamPoints) {
                 return (
                     <div className="rvb-user-ended rvb-user-tie">
                         <h1>It's a tie!</h1>
-                        Holy moly it's a tie! Both teams scored {yourTeamPoints}!
+                        <p>
+                        Holy moly! Both teams scored <span className="rvb-points">{yourTeamPoints} points!</span>
+                        </p>
 
                         <div className="rvb-user-ended-contribution-container">
-                            Your contribution: <span className="rvb-user-ended-contribution">{this.state.numTaps}</span> taps!
+                            You contributed <span className="rvb-points">{this.state.numTaps} points!</span>
                         </div>
                     </div>
                 );
             } else {
-                const result = yourTeamPoints > otherTeamPoints ? "won!" : "lost :(";
+                const won = yourTeamPoints > otherTeamPoints;
+                const result = won ? "won!" : "lost :(";
+                if (won && Math.random() < 0.2) { // reduce confetti on mobile
+                    addConfetti();
+                }
                 return (
                     <div className="rvb-user-ended">
                         <h1>Your team {result}</h1>
+                        <p className="rvb-user-ended-matchup"><span className="rvb-points" ref={randomAnimate}>{yourTeamPoints}</span> to <span className="rvb-points" ref={randomAnimate}>{otherTeamPoints}</span></p>
                         <div className="rvb-user-ended-contribution-container">
-                            Your contribution: <span className="rvb-user-ended-contribution">{this.state.numTaps}</span> taps!
+                            You contributed <span className="rvb-points">{this.state.numTaps} points!</span>
                         </div>
                     </div>
                 );
