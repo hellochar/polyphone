@@ -3,6 +3,7 @@ $georgia-family: Georgia,Cambria,"Times New Roman",Times,serif;
 $arial-family: Arial, Helvetica Neue, Helvetica, sans-serif;
 
 @import "~normalize.css/";
+@import "~animate.css/";
 
 @import "./colors";
 
@@ -30,6 +31,11 @@ html {
 //         margin: auto;
 //     }
 // }
+
+.confetti {
+    animation-duration: 1s;
+    animation-name: floatOutwards;
+}
 
 .landing-page-container {
     display: flex;

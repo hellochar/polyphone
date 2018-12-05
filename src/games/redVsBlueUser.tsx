@@ -2,6 +2,7 @@ import classnames from "classnames";
 import * as React from "react";
 
 import { DatabaseUser, UserStateRedVsBlue, DatabaseGameStateRedVsBlue } from "src/firebaseSchema";
+import { addConfetti } from "../common/confetti";
 
 export interface RedVsBlueUserProps {
     gameStateRef: firebase.database.Reference;
@@ -30,8 +31,16 @@ export class RedvsBlueUser extends React.Component<RedVsBlueUserProps, {}> {
         this.myTeamPointsRef = props.gameStateRef.child(myTeamPointsRefUrl);
     }
 
-    private handleTouch = (e: React.SyntheticEvent) => {
+    private buttonRef: HTMLElement | null = null;
+    private handleButtonRef = (ref: HTMLElement | null) => {
+        this.buttonRef = ref;
+    }
+
+    private handleTouch = (e: React.SyntheticEvent<HTMLElement>) => {
         e.preventDefault();
+        // if (this.buttonRef) {
+            // addConfetti(this.buttonRef);
+        // }
         this.setState({
             numTaps: this.state.numTaps + 1,
         });
@@ -85,7 +94,7 @@ export class RedvsBlueUser extends React.Component<RedVsBlueUserProps, {}> {
         else if (this.state.currentTime >= gameState.timeGameStart && this.state.currentTime < gameState.timeGameStart + gameState.gameDuration) {
             return (
                 <div className="rvb-user-tap-collector" onClick={this.handleTouch}>
-                    <div className="rvb-user-tap-button">{this.state.numTaps}</div>
+                    <div className="rvb-user-tap-button" ref={this.handleButtonRef}>{this.state.numTaps}</div>
                 </div>
             );
         }

@@ -10,6 +10,8 @@ export interface RedVsBlueState {
     currentTime: number;
 }
 
+const ANIMATION_NAMES = ["bounce", "tada", "swing", "rubberBand"];
+
 export class RedVsBlue extends React.Component<RedVsBlueProps, RedVsBlueState> {
     private intervalId?: number;
     state = {
@@ -35,10 +37,26 @@ export class RedVsBlue extends React.Component<RedVsBlueProps, RedVsBlueState> {
         );
     }
 
+    private randomAnimate = (ref: HTMLElement | null) => {
+        if (ref != null) {
+            const id = setInterval(() => {
+                if (!document.body.contains(ref)) {
+                    clearInterval(id);
+                } else {
+                    const animName = ANIMATION_NAMES[Math.floor(Math.random() * ANIMATION_NAMES.length)];
+                    ref.classList.add(animName);
+                    setTimeout(() => {
+                        ref.classList.remove(animName);
+                    }, 1000);
+                }
+            }, 5000);
+        }
+    }
+
     renderContent() {
         const { gameState } = this.props;
         // game hasn't started yet, show a countdown timer
-        if (this.state.currentTime < gameState.timeGameStart) {
+        if (false && this.state.currentTime < gameState.timeGameStart) {
             const millisRemaining = gameState.timeGameStart - this.state.currentTime;
             return (
                 <div className="rvb-countdown">
@@ -49,25 +67,25 @@ export class RedVsBlue extends React.Component<RedVsBlueProps, RedVsBlueState> {
             );
         }
         // game is currently in play
-        else if (this.state.currentTime >= gameState.timeGameStart && this.state.currentTime < gameState.timeGameStart + gameState.gameDuration) {
+        else if (true || this.state.currentTime >= gameState.timeGameStart && this.state.currentTime < gameState.timeGameStart + gameState.gameDuration) {
             const millisRemaining = gameState.timeGameStart + gameState.gameDuration - this.state.currentTime;
             return (
-                <>
+                <div className="rvb-play">
                     <p className="rvb-instructions">Tap your screen as fast as possible to earn points for your team. Most points wins!</p>
                     <div className="rvb-team rvb-red">
                         <div className="rvb-score-container">
                             <h1 className="rvb-team-name">Red</h1>
-                            <h2 className="rvb-team-points">{gameState.redPoints}</h2>
+                            <h2 className="rvb-team-points" ref={this.randomAnimate}>{gameState.redPoints}</h2>
                         </div>
                     </div>
                     <div className="rvb-team rvb-blue">
                         <div className="rvb-score-container">
                             <h1 className="rvb-team-name">Blue</h1>
-                            <h2 className="rvb-team-points">{gameState.bluePoints}</h2>
+                            <h2 className="rvb-team-points" ref={this.randomAnimate}>{gameState.bluePoints}</h2>
                         </div>
                     </div>
-                    <div className="rvb-timer">00:{Math.ceil(millisRemaining / 1000)} remaining</div>
-                </>
+                    <div className="rvb-timer">{(new Date(millisRemaining).toISOString().substring(14, 19)} remaining</div>
+                </div>
             );
         }
         // game ended

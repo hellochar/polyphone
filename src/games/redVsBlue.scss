@@ -13,10 +13,24 @@ $rvb-blue: lightblue;
         flex-direction: column;
         align-items: center;
         margin: auto;
+
+        animation-duration: 500ms;
+        animation-fill-mode: both;
+        animation-name: bounceInRight;
     }
 
     .rvb-instructions {
         font-size: 1.5em;
+    }
+
+    .rvb-play {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        animation-duration: 500ms;
+        animation-fill-mode: both;
+        animation-name: bounceInRight;
     }
 
     .rvb-team {
@@ -43,6 +57,9 @@ $rvb-blue: lightblue;
             .rvb-team-points {
                 font-size: 15em;
                 margin: 0.25em;
+
+                animation-duration: 1s;
+                animation-fill-mode: both;
             }
         }
     }
