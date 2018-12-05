@@ -6,7 +6,17 @@ $rvb-blue: lightblue;
     align-items: center;
     height: 100%;
     width: 100%;
-    // background: linear-gradient(90deg, rgba(255, 0, 0, 1) 0%, rgba(237, 11, 17, 1) 47%, rgba(53, 127, 190, 1) 53%, rgba(35, 138, 207, 1) 100%);
+
+    background: linear-gradient(273deg, #ff0000, #add8e6, #ff0000, #add8e6, #add8e6);
+    background-size: 1000% 1000%;
+
+    animation: backgroundAnimation 24s ease infinite;
+
+    @keyframes backgroundAnimation { 
+        0%{background-position:0% 19%}
+        50%{background-position:100% 82%}
+        100%{background-position:0% 19%}
+    }
 
     .rvb-countdown {
         display: flex;

@@ -41,7 +41,7 @@ export class RedVsBlue extends React.Component<RedVsBlueProps, RedVsBlueState> {
     renderContent() {
         const { gameState, users } = this.props;
         // game hasn't started yet, show a countdown timer
-        if (true || this.state.currentTime < gameState.timeGameStart) {
+        if (this.state.currentTime < gameState.timeGameStart) {
             const playersConnected = Object.keys(users || {}).length;
             const playersElements: JSX.Element[] = [];
             if (users != null) {
