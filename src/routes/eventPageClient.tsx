@@ -56,6 +56,10 @@ export class EventPageClient extends React.Component<ClientProps, ClientState> {
         window.addEventListener("beforeunload", () => {
             this.userRef.remove();
         });
+
+        window.addEventListener("blur", () => {
+            this.userRef.remove();
+        });
     }
 
     render() {

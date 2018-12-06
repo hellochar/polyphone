@@ -100,7 +100,8 @@ export class RedvsBlueUser extends React.PureComponent<RedVsBlueUserProps, {}> {
         // game is currently in play
         else if (this.state.currentTime >= gameState.timeGameStart && this.state.currentTime < gameState.timeGameStart + gameState.gameDuration) {
             return (
-                <div className="rvb-user-tap-collector animated slideInRight" onClick={this.handleTouch}>
+                <div className="rvb-user-tap-collector animated slideInRight" onTouchStart={this.handleTouch}>
+                    <h1 className="rvb-user-tap-instructions">Tap to earn points!</h1>
                     <div className="rvb-user-tap-button" ref={this.handleButtonRef}>{this.state.numTaps}</div>
                 </div>
             );

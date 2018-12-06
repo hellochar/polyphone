@@ -279,6 +279,11 @@ $rvb-blue: lightblue;
     justify-content: center;
     align-items: center;
     font-size: 0.6666667em;
+    flex-direction: column;
+
+    .rvb-user-tap-instructions {
+        margin: 1em;
+    }
 
     &:active {
         .rvb-user-tap-button {
